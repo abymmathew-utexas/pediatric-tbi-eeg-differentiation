@@ -41,4 +41,4 @@ data/processed/*
 *.ckpt
 *.onnx
 *.h5
-models/
+/models/

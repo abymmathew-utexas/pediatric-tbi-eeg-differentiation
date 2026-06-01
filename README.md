@@ -62,6 +62,45 @@ src/                   # Core pipeline and model code
    ```
 3. Review `docs/project_charter.md` and `docs/data_governance.md` before any data work.
 
+## Baseline Pipeline
+
+Run baseline preprocessing and feature extraction:
+
+```bash
+python src/run_baseline_pipeline.py \
+   --input-dir data/raw \
+   --output-csv data/processed/baseline_features.csv
+```
+
+What this baseline does:
+- Loads EEG files (`.edf`, `.bdf`, `.fif`, `.vhdr`, `.set`)
+- Applies EEG filtering, notch filtering, and resampling
+- Splits continuous EEG into fixed-length overlapping epochs
+- Extracts per-channel statistical and bandpower features
+- Writes a tabular features CSV for downstream modeling
+
+### Data Processing and Feature Extraction Flow
+
+```mermaid
+flowchart TD
+   A[Raw EEG Files<br/>EDF BDF FIF VHDR SET] --> B[Load EEG with MNE]
+   B --> C[Channel Selection<br/>Keep EEG Channels]
+   C --> D[Bandpass Filter<br/>1 to 40 Hz]
+   D --> E[Notch Filter<br/>50 or 60 Hz]
+   E --> F[Resample<br/>Target Sampling Rate]
+   F --> G[Windowing and Epoching<br/>Fixed Length Overlap]
+   G --> H[Epoch Tensor<br/>n_epochs x n_channels x n_samples]
+   H --> I[Per Channel Statistical Features<br/>mean std min max rms energy]
+   H --> J[Per Channel Spectral Features<br/>delta theta alpha beta bandpower]
+   I --> K[Concatenate Features]
+   J --> K
+   K --> L[Feature Table<br/>Rows epochs Columns features]
+   L --> M[baseline_features.csv]
+   M --> N[Baseline Model Training<br/>Logistic Regression]
+```
+
+Optional baseline model training script is available in `src/models/baseline_model.py`.
+
 ## Data Governance and Ethics
 - Use only de-identified datasets and approved data-use workflows.
 - Do not commit PHI, PII, or restricted datasets to this repository.

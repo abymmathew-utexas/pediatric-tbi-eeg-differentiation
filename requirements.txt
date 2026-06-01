@@ -3,11 +3,27 @@ pandas>=2.2
 scipy>=1.13
 matplotlib>=3.9
 seaborn>=0.13
-scikit-learn>=1.5
+tqdm>=4.66
+
+# EEG and signal processing
 mne>=1.7
 pywavelets>=1.6
+wfdb>=4.1
+
+# Machine learning
+scikit-learn>=1.5
+imbalanced-learn>=0.12
+xgboost>=2.1
+
+# Deep learning (install one or both based on your workflow)
 torch>=2.3
 tensorflow>=2.16
+
+# Experiment tracking and interpretability
+shap>=0.46
+
+# Notebook and testing
 jupyter>=1.0
 notebook>=7.2
+ipykernel>=6.29
 pytest>=8.2
