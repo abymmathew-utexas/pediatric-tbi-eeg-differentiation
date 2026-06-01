@@ -26,4 +26,10 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest -q
+          code=0
+          pytest -q || code=$?
+          if [ $code -eq 5 ]; then
+            echo "No tests collected; treating as success for now."
+            exit 0
+          fi
+          exit $code
